@@ -1,15 +1,224 @@
 <%- include('partials/header') -%>
-  <div class="container">
-    <div class="row justify-content-center mt-5">
-      <ul class="row list-unstyled">
-        <% for(var i=0; i<posts.length; i++) {%>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/post/<%= posts[i]._id%>">
-              <img class="img-fluid" src="<%= posts[i].image%>">
+ 
+<body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
+
+    <header class="p-4 text-white flex items-center justify-between">
+        <!-- Logo -->
+        <div class="w-36">
+            <img src="imgs/myuncle.png" alt="">
+        </div>
+    
+        <!-- Hamburger Menu (visible on small screens) -->
+        <button id="menu-toggle" class="block sm:hidden focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        
+        <div class="text-2xl space-x-2 mr-10">
+            <a href="/cart" class="text-white mr-5">
+                <span>Users</span>
             </a>
-          </li>
-        <% } %>
-        </ul>
-    </div>
-  </div>  
+            <a href="/programs.html" class="text-white mr-5">
+                <span>Programs</span>
+            </a>
+        </div>
+    
+        <!-- Icons for small screens (hidden on desktop) -->
+        <div class="text-3xl space-x-4">
+            <!-- Show user emblem only when logged in -->
+            <% if (user) { %>
+                <a href="/profile" class="text-blue-500 mr-5">
+                    <i class="fas fa-user"></i>
+                </a>
+            <% } %>
+        </div>
+    </header>
+    
+  
+  <!-- Sidebar Menu (hidden by default) -->
+  <aside id="sidebar" class="fixed inset-y-0 right-0 bg-gray-900 bg-opacity-90 transform translate-x-full transition-transform duration-300 w-64 sm:w-80 lg:w-96">
+      <div class="p-4">
+          <!-- Close Button -->
+          <button id="close-sidebar" class="text-white text-xl">
+              <i class="fas fa-times"></i>
+          </button>
+  
+          <!-- Navigation Links for Sidebar (appear when opened) -->
+          <nav class="mt-4 flex flex-col space-y-4">
+              <a href="/" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Home</a>
+              <a href="/products" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Products</a>
+              <a href="/login" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Blog</a>
+          </nav>
+  
+          <!-- Icons inside the Sidebar (Removed search and cart) -->
+          <div class="mt-4 flex flex-col items-center space-y-4">
+              <a href="/admin" class="text-white text-lg hover:text-yellow-500 transition-all duration-300">
+                  <i class="fas fa-user"></i>
+              </a>
+          </div>
+      </div>
+  </aside>
+  
+  
+  <!-- JavaScript for the Hamburger Menu -->
+  <script>
+      const menuToggle = document.getElementById('menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const closeSidebar = document.getElementById('close-sidebar');
+  
+      menuToggle.addEventListener('click', () => {
+          sidebar.classList.remove('translate-x-full'); // Show the sidebar
+      });
+  
+      closeSidebar.addEventListener('click', () => {
+          sidebar.classList.add('translate-x-full'); // Hide the sidebar
+      });
+  </script>
+  
+  
+
+
+<!-- Heading -->
+<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Users</h1>
+
+<!-- Main Content -->
+<main class="flex-grow flex justify-center items-center px-4">
+  <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+      <div class="flex items-center justify-between mb-4">
+          <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">Available</h5>
+          <a href="#" class="font-mono font-bold text-stone-100 hover:text-black" style="font-family: 'Poppins', serif;">
+              View all
+          </a>
+      </div>
+      <div class="flow-root">
+          <ul role="list" class="divide-y divide-gray-200">
+              <!-- Repeated List Items -->
+              <li class="py-3 sm:py-4">
+                  <div class="flex items-center">
+                      <div class="flex-shrink-0">
+                          <img class="w-11 h-11" src="/public/imgs/instagram.png" alt="User image">
+                      </div>
+                      <div class="flex-1 min-w-0 ml-4">
+                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
+                              User: xexx
+                          </p>
+                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                              Secured and price negotiable
+                          </p>
+                      </div>
+                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
+                          $320
+                      </div>
+                  </div>
+              </li>
+              <li class="py-3 sm:py-4">
+                  <div class="flex items-center">
+                      <div class="flex-shrink-0">
+                          <img class="w-11 h-11" src="instagram.png" alt="User image">
+                      </div>
+                      <div class="flex-1 min-w-0 ml-4">
+                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
+                              User: venr
+                          </p>
+                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                              Not secured, fixed price
+                          </p>
+                      </div>
+                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
+                          $320
+                      </div>
+                  </div>
+              </li>
+              <li class="py-3 sm:py-4">
+                  <div class="flex items-center">
+                      <div class="flex-shrink-0">
+                          <img class="w-11 h-11" src="instagram.png" alt="User image">
+                      </div>
+                      <div class="flex-1 min-w-0 ml-4">
+                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
+                              User: obnm
+                          </p>
+                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                              Secured but not negotiable
+                          </p>
+                      </div>
+                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
+                          $320
+                      </div>
+                  </div>
+              </li>
+              <li class="py-3 sm:py-4">
+                  <div class="flex items-center">
+                      <div class="flex-shrink-0">
+                          <img class="w-11 h-11" src="instagram.png" alt="User image">
+                      </div>
+                      <div class="flex-1 min-w-0 ml-4">
+                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
+                              User: ms5v
+                          </p>
+                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                              Secured and price negotiable
+                          </p>
+                      </div>
+                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
+                          $320
+                      </div>
+                  </div>
+              </li>
+              <li class="py-3 sm:py-4">
+                  <div class="flex items-center">
+                      <div class="flex-shrink-0">
+                          <img class="w-11 h-11" src="instagram.png" alt="User image">
+                      </div>
+                      <div class="flex-1 min-w-0 ml-4">
+                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
+                              User: 8oup
+                          </p>
+                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                              Not secured, price negotiable
+                          </p>
+                      </div>
+                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
+                          $320
+                      </div>
+                  </div>
+              </li>
+              
+              
+              <!-- Add More List Items Here -->
+          </ul>
+      </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full max-w-screen-lg mx-auto px-4 py-6 sm:py-8">
+  <hr class="my-6 border-gray-200 dark:border-gray-700 lg:my-8" />
+  <div class="md:flex md:justify-between">
+      <div>
+          <a href="/" class="text-2xl sm:text-4xl font-bold hover:text-red-500 transition-all duration-300 block" style="font-family: 'Poppins', serif;">
+              YourLogo
+          </a>
+          <span class="text-sm text-gray-500 dark:text-gray-400 block mt-5" style="font-family: 'Poppins', serif;">
+              © 2025 YourLogo™. <br> Description.
+          </span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-3">
+          <div>
+              <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Resources</h2>
+              <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                  <li class="mb-2">
+                      <a href="https://flowbite.com/" class="hover:underline">RoniDev</a>
+                  </li>
+                  <li>
+                      <a href="https://tailwindcss.com/" class="hover:underline">NateDev</a>
+                  </li>
+              </ul>
+          </div>
+          <!-- Add More Sections -->
+      </div>
+  </div>
+</footer>
+
+</body>
 <%- include('partials/footer') -%>

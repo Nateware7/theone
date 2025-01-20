@@ -1,46 +1,171 @@
 <%- include('partials/header') -%>
-<div class="container">
-  <div class="row mt-5">
-      <div class="col-6">
-          <div>
-              <p><strong>User Name</strong>: <%= user.userName %></p>
-              <p><strong>Email</strong>: <%= user.email %></p>
-              <a href="/logout" class="col-3 btn btn-primary">Logout</a>
-          </div>
-          <div class="mt-5">
-            <h2>Add a post</h2>
-            <form action="/post/createPost" enctype="multipart/form-data" method="POST">
-              <div class="mb-3">
-                  <label for="title" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="title" name="title">
-              </div>
-              <div class="mb-3">
-                <label for="caption" class="form-label">Caption</label>
-                <textarea class="form-control" id="caption" name="caption"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="imgUpload" class="form-label">Image</label>
-                <input type="file" class="form-control" id="imageUpload" name="file">
-              </div>
-              <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+
+<body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
+    <!-- Header -->
+    <header class="p-4 text-white flex items-center justify-between">
+        <div class="text-lg sm:text-2xl font-bold" style="font-family: 'Poppins', serif;">
+            <a href="/" class="hover:text-red-500 transition-all duration-300">YourLogo</a>
+        </div>
+        
+        <button id="menu-toggle" class="block sm:hidden focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+    
+    </header>
+
+    <!-- Heading -->
+    <h1 class="flex justify-center items-center text-white mt-10 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Add Content</h1>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex justify-center items-center px-4 pb-8">
+        <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+            <!-- Content Type Selection -->
+            <div class="mb-6">
+                <label class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Content Type</label>
+                <select id="content-type" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
+                    <option value="user">User</option>
+                    <option value="program">Program</option>
+                </select>
+            </div>
+
+            <!-- User Form -->
+            <form id="user-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Username</label>
+                        <input type="text" id="username" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                    <div>
+                        <label for="user-price" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Price ($)</label>
+                        <input type="number" id="user-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="user-description" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">
+                            Description (50 characters max)
+                            <span id="char-count" class="float-right">0/50</span>
+                        </label>
+                        <textarea id="user-description" maxlength="50" rows="2" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required></textarea>
+                    </div>
+                </div>
             </form>
-          </div>
-      </div>
-      <div class="col-6">
-        <ul class="row list-unstyled">
-        <% for(var i=0; i<posts.length; i++) {%>
-          <li class="col-6 justify-content-between mt-5">
-            <a href="/post/<%= posts[i]._id%>">
-              <img class="img-fluid" src="<%= posts[i].image%>">
-            </a>
-          </li>
-        <% } %>
-        </ul>
-        <div class="row justify-content-center mt-5">
-          <a class="btn btn-primary" href="/feed">Return to Feed</a>
-        </div>  
-      </div>  
-    </div>
-  </div>
-</div>
+
+            <!-- Program Form -->
+            <form id="program-form" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label for="title" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Program Title</label>
+                        <input type="text" id="title" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Description</label>
+                        <textarea id="description" rows="3" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required></textarea>
+                    </div>
+                    <div>
+                        <label for="program-price" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Price ($)</label>
+                        <input type="number" id="program-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                    <div>
+                        <label for="tags" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Tags (comma-separated)</label>
+                        <input type="text" id="tags" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="e.g., JavaScript, Web, Tool">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="image" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Image Upload</label>
+                        <input type="file" id="image" accept="image/*" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="features" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Features (one per line)</label>
+                        <textarea id="features" rows="4" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end mt-6">
+                <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
+                    Add Content
+                </button>
+            </div>
+
+            <!-- Preview Section (Only shown for users) -->
+            <div id="user-preview" class="mt-8">
+                <h5 class="text-lg font-mono font-bold text-white mb-4" style="font-family: 'Poppins', serif;">Preview</h5>
+                <div class="bg-purple-800 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-11 h-11 bg-white rounded-full"></div>
+                        </div>
+                        <div class="flex-1 min-w-0 ml-4">
+                            <p id="preview-username" class="text-sm font-medium text-white truncate" style="font-family: 'Poppins', serif;">
+                                Preview Username
+                            </p>
+                            <p id="preview-description" class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                                Description will appear here
+                            </p>
+                        </div>
+                        <div id="preview-price" class="text-base font-semibold text-white" style="font-family: 'Poppins', serif;">
+                            $0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-screen-lg mx-auto px-4 py-6 sm:py-8">
+        <hr class="my-6 border-gray-200 dark:border-gray-700 lg:my-8" />
+        <div class="md:flex md:justify-between">
+            <div>
+                <a href="/" class="text-2xl sm:text-4xl font-bold hover:text-red-500 transition-all duration-300 block" style="font-family: 'Poppins', serif;">
+                    YourLogo
+                </a>
+                <span class="text-sm text-gray-500 dark:text-gray-400 block mt-5" style="font-family: 'Poppins', serif;">
+                    © 2025 YourLogo™. <br> Description.
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle between user and program forms
+        document.getElementById('content-type').addEventListener('change', function() {
+            const userForm = document.getElementById('user-form');
+            const programForm = document.getElementById('program-form');
+            const userPreview = document.getElementById('user-preview');
+            
+            if (this.value === 'user') {
+                userForm.classList.remove('hidden');
+                programForm.classList.add('hidden');
+                userPreview.classList.remove('hidden');
+            } else {
+                userForm.classList.add('hidden');
+                programForm.classList.remove('hidden');
+                userPreview.classList.add('hidden');
+            }
+        });
+
+        // Character count for user description
+        const userDescription = document.getElementById('user-description');
+        const charCount = document.getElementById('char-count');
+        
+        userDescription.addEventListener('input', function() {
+            charCount.textContent = `${this.value.length}/50`;
+        });
+
+        // Live preview updates for user form
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('preview-username').textContent = this.value || 'Preview Username';
+        });
+
+        document.getElementById('user-description').addEventListener('input', function() {
+            document.getElementById('preview-description').textContent = this.value || 'Description will appear here';
+        });
+
+        document.getElementById('user-price').addEventListener('input', function() {
+            document.getElementById('preview-price').textContent = this.value ? `$${this.value}` : '$0';
+        });
+    </script>
+</body>
+</html>
 <%- include('partials/footer') -%>

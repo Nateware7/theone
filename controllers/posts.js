@@ -12,12 +12,20 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
+      // Fetch all posts sorted by creation date
       const posts = await Post.find().sort({ createdAt: "desc" }).lean();
-      res.render("feed.ejs", { posts: posts });
+      
+      // Check if user is authenticated and pass user data if logged in
+      const user = req.isAuthenticated() ? req.user : null;
+      
+      // Render the feed view with posts and user data (if available)
+      res.render("feed", { posts: posts, user: user });
     } catch (err) {
       console.log(err);
+      res.status(500).send("Server Error");
     }
   },
+  
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);

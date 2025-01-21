@@ -14,5 +14,8 @@ router.post("/login", authController.postLogin);
 router.get("/logout", authController.logout);
 router.get("/signuping", authController.getSignuping);
 router.post("/signuping", authController.postSignuping);
+// Add this route
+router.post("/createFeedItem", ensureAuth, postsController.createFeedItem);
+router.delete("/feedItem/:id", ensureAuth, postsController.deleteFeedItem);
 
 module.exports = router;

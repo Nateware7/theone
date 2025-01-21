@@ -1,5 +1,6 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const FeedItem = require("../models/FeedItem");
 
 module.exports = {
   getProfile: async (req, res) => {
@@ -12,20 +13,60 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
-      // Fetch all posts sorted by creation date
-      const posts = await Post.find().sort({ createdAt: "desc" }).lean();
+      const feedItems = await FeedItem.find()
+        .sort({ price: -1 })  // Sort by price descending
+        .lean();  // Convert to plain JavaScript objects
       
-      // Check if user is authenticated and pass user data if logged in
-      const user = req.isAuthenticated() ? req.user : null;
-      
-      // Render the feed view with posts and user data (if available)
-      res.render("feed", { posts: posts, user: user });
+      // Pass the items and user to the template
+      res.render("feed", { 
+        feedItems: feedItems, 
+        user: req.isAuthenticated() ? req.user : null 
+      });
     } catch (err) {
       console.log(err);
       res.status(500).send("Server Error");
     }
   },
+
+  createFeedItem: async (req, res) => {
+    try {
+      await FeedItem.create({
+        username: req.body.username,
+        price: req.body.price,
+        description: req.body.description,
+        createdBy: req.user.id  // Add this line
+      });
+      console.log("Feed item has been added!");
+      res.redirect("/feed");
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "Error creating feed item" });
+    }
+  },
   
+  deleteFeedItem: async (req, res) => {
+    try {
+      const feedItem = await FeedItem.findById(req.params.id);
+      
+      // Check if feedItem exists
+      if (!feedItem) {
+        return res.status(404).send("Item not found");
+      }
+      
+      // Check if user owns the feedItem
+      if (feedItem.createdBy.toString() !== req.user.id) {
+        return res.status(401).send("Unauthorized");
+      }
+      
+      await FeedItem.deleteOne({ _id: req.params.id });
+      console.log("Deleted Feed Item");
+      res.redirect("/feed");
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Server Error");
+    }
+  },
+
   getPost: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);

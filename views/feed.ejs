@@ -85,107 +85,40 @@
   <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
       <div class="flex items-center justify-between mb-4">
           <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">Available</h5>
-          <a href="#" class="font-mono font-bold text-stone-100 hover:text-black" style="font-family: 'Poppins', serif;">
-              View all
-          </a>
       </div>
       <div class="flow-root">
+          <!-- Replace your static ul with this dynamic one -->
           <ul role="list" class="divide-y divide-gray-200">
-              <!-- Repeated List Items -->
-              <li class="py-3 sm:py-4">
-                  <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                          <img class="w-11 h-11" src="/public/imgs/instagram.png" alt="User image">
-                      </div>
-                      <div class="flex-1 min-w-0 ml-4">
-                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
-                              User: xexx
-                          </p>
-                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                              Secured and price negotiable
-                          </p>
-                      </div>
-                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
-                          $320
-                      </div>
-                  </div>
-              </li>
-              <li class="py-3 sm:py-4">
-                  <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                          <img class="w-11 h-11" src="instagram.png" alt="User image">
-                      </div>
-                      <div class="flex-1 min-w-0 ml-4">
-                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
-                              User: venr
-                          </p>
-                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                              Not secured, fixed price
-                          </p>
-                      </div>
-                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
-                          $320
-                      </div>
-                  </div>
-              </li>
-              <li class="py-3 sm:py-4">
-                  <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                          <img class="w-11 h-11" src="instagram.png" alt="User image">
-                      </div>
-                      <div class="flex-1 min-w-0 ml-4">
-                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
-                              User: obnm
-                          </p>
-                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                              Secured but not negotiable
-                          </p>
-                      </div>
-                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
-                          $320
-                      </div>
-                  </div>
-              </li>
-              <li class="py-3 sm:py-4">
-                  <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                          <img class="w-11 h-11" src="instagram.png" alt="User image">
-                      </div>
-                      <div class="flex-1 min-w-0 ml-4">
-                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
-                              User: ms5v
-                          </p>
-                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                              Secured and price negotiable
-                          </p>
-                      </div>
-                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
-                          $320
-                      </div>
-                  </div>
-              </li>
-              <li class="py-3 sm:py-4">
-                  <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                          <img class="w-11 h-11" src="instagram.png" alt="User image">
-                      </div>
-                      <div class="flex-1 min-w-0 ml-4">
-                          <p class="text-sm font-medium text-gray-900 truncate dark:text-white" style="font-family: 'Poppins', serif;">
-                              User: 8oup
-                          </p>
-                          <p class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                              Not secured, price negotiable
-                          </p>
-                      </div>
-                      <div class="text-base font-semibold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">
-                          $320
-                      </div>
-                  </div>
-              </li>
-              
-              
-              <!-- Add More List Items Here -->
-          </ul>
+            <% feedItems.forEach(function(item) { %>
+                <li class="py-3 sm:py-4">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <img class="w-11 h-11" src="css/imgs/instagram.png" alt="User image">
+                        </div>
+                        <div class="flex-1 min-w-0 ml-4">
+                            <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                               <%= item.username %>
+                            </p>
+                            <p class="text-sm text-stone-100 mt-1">
+                                <%= item.description %>
+                            </p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white mr-4">
+                                $<%= item.price %>
+                            </div>
+                            <% if (user && item.createdBy && item.createdBy.equals(user._id)) { %>
+                                <form action="/feedItem/<%= item._id %>?_method=DELETE" method="POST" class="inline">
+                                    <button type="submit" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
       </div>
   </div>
 </main>

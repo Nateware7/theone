@@ -4,7 +4,7 @@
     <!-- Header -->
     <header class="p-4 text-white flex items-center justify-between">
         <div class="text-lg sm:text-2xl font-bold" style="font-family: 'Poppins', serif;">
-            <a href="/" class="hover:text-red-500 transition-all duration-300">YourLogo</a>
+            <a href="/feed" class="hover:text-red-500 transition-all duration-300">YourLogo</a>
         </div>
         
         <button id="menu-toggle" class="block sm:hidden focus:outline-none">
@@ -20,14 +20,7 @@
     <!-- Main Content -->
     <main class="flex-grow flex justify-center items-center px-4 pb-8">
         <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
-            <!-- Content Type Selection -->
-            <div class="mb-6">
-                <label class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Content Type</label>
-                <select id="content-type" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
-                    <option value="user">User</option>
-                    <option value="program">Program</option>
-                </select>
-            </div>
+
 
             <!-- User Form -->
             <form id="user-form" class="space-y-6">
@@ -128,43 +121,34 @@
     </footer>
 
     <script>
-        // Toggle between user and program forms
-        document.getElementById('content-type').addEventListener('change', function() {
-            const userForm = document.getElementById('user-form');
-            const programForm = document.getElementById('program-form');
-            const userPreview = document.getElementById('user-preview');
-            
-            if (this.value === 'user') {
-                userForm.classList.remove('hidden');
-                programForm.classList.add('hidden');
-                userPreview.classList.remove('hidden');
-            } else {
-                userForm.classList.add('hidden');
-                programForm.classList.remove('hidden');
-                userPreview.classList.add('hidden');
-            }
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    // Get input elements
+    const usernameInput = document.getElementById('username');
+    const priceInput = document.getElementById('user-price');
+    const descriptionInput = document.getElementById('user-description');
 
-        // Character count for user description
-        const userDescription = document.getElementById('user-description');
-        const charCount = document.getElementById('char-count');
-        
-        userDescription.addEventListener('input', function() {
-            charCount.textContent = `${this.value.length}/50`;
-        });
+    // Get preview elements
+    const previewUsername = document.getElementById('preview-username');
+    const previewPrice = document.getElementById('preview-price');
+    const previewDescription = document.getElementById('preview-description');
+    const charCount = document.getElementById('char-count');
 
-        // Live preview updates for user form
-        document.getElementById('username').addEventListener('input', function() {
-            document.getElementById('preview-username').textContent = this.value || 'Preview Username';
-        });
+    // Update preview on username change
+    usernameInput.addEventListener('input', function(e) {
+        previewUsername.textContent = e.target.value || 'Preview Username';
+    });
 
-        document.getElementById('user-description').addEventListener('input', function() {
-            document.getElementById('preview-description').textContent = this.value || 'Description will appear here';
-        });
+    // Update preview on price change
+    priceInput.addEventListener('input', function(e) {
+        previewPrice.textContent = `$${e.target.value || '0'}`;
+    });
 
-        document.getElementById('user-price').addEventListener('input', function() {
-            document.getElementById('preview-price').textContent = this.value ? `$${this.value}` : '$0';
-        });
+    // Update preview on description change
+    descriptionInput.addEventListener('input', function(e) {
+        previewDescription.textContent = e.target.value || 'Description will appear here';
+        charCount.textContent = `${e.target.value.length}/50`;
+    });
+});
     </script>
 </body>
 </html>

@@ -65,24 +65,7 @@
           </div>
       </div>
   </aside>
-  
-  
-  <!-- JavaScript for the Hamburger Menu -->
-  <script>
-      const menuToggle = document.getElementById('menu-toggle');
-      const sidebar = document.getElementById('sidebar');
-      const closeSidebar = document.getElementById('close-sidebar');
-  
-      menuToggle.addEventListener('click', () => {
-          sidebar.classList.remove('translate-x-full'); // Show the sidebar
-      });
-  
-      closeSidebar.addEventListener('click', () => {
-          sidebar.classList.add('translate-x-full'); // Hide the sidebar
-      });
-  </script>
-  
-  
+    
 
 
 <!-- Heading -->
@@ -101,11 +84,21 @@
                 <li class="py-3 sm:py-4">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <img class="w-11 h-11" src="css/imgs/instagram.png" alt="User image">
+                            <% let platformImage; 
+                            if (item.platform === 'instagram') {
+                                platformImage = 'instagram.png';
+                            } else if (item.platform === 'x') {
+                                platformImage = 'x.png';
+                            } else if (item.platform === 'discord') {
+                                platformImage = 'discord.png';
+                            } else {
+                                platformImage = 'default.png';
+                            } %>
+                            <img class="w-11 h-11" src="css/imgs/<%= platformImage %>" alt="Platform image">
                         </div>
                         <div class="flex-1 min-w-0 ml-4">
                             <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                               <%= item.username %>
+                                <%= item.username %>
                             </p>
                             <p class="text-sm text-stone-100 mt-1">
                                 <%= item.description %>

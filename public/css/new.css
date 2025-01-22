@@ -1,0 +1,23 @@
+
+.platform-selector {
+    background-color: rgba(30, 28, 27, 255);
+}
+
+.platform-selector:hover {
+    opacity: 0.8;
+}
+
+.platform-selector.selected[data-platform="instagram"] {
+    background-color: rgba(219, 39, 119, 0.2);
+    box-shadow: 0 0 0 2px rgb(219, 39, 119);
+}
+
+.platform-selector.selected[data-platform="x"] {
+    background-color: rgba(37, 99, 235, 0.2);
+    box-shadow: 0 0 0 2px rgb(37, 99, 235);
+}
+
+.platform-selector.selected[data-platform="discord"] {
+    background-color: rgba(147, 51, 234, 0.2);
+    box-shadow: 0 0 0 2px rgb(147, 51, 234);
+}

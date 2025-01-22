@@ -32,9 +32,10 @@ module.exports = {
     try {
       await FeedItem.create({
         username: req.body.username,
+        platform: req.body.platform,  // Add this line
         price: req.body.price,
         description: req.body.description,
-        createdBy: req.user.id  // Add this line
+        createdBy: req.user.id
       });
       console.log("Feed item has been added!");
       res.redirect("/feed");
@@ -43,6 +44,7 @@ module.exports = {
       res.status(500).json({ error: "Error creating feed item" });
     }
   },
+  
   
   deleteFeedItem: async (req, res) => {
     try {

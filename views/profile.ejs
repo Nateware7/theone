@@ -27,6 +27,40 @@
             <!-- User Form -->
 
             <form id="user-form" class="space-y-6" action="/createFeedItem" method="POST">
+                <!-- Platform Selection -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">
+                        Select Platform
+                    </label>
+                    <div class="flex space-x-4">
+                        <!-- Instagram Option -->
+                        <!-- Instagram Option -->
+<label class="inline-flex items-center">
+    <input type="radio" name="platform" value="instagram" class="hidden" onchange="updatePlatformStyle(this)" checked>
+    <div class="platform-selector p-3 rounded-lg cursor-pointer transition-all selected" data-platform="instagram">
+        <img src="css/imgs/instagram.png" alt="Instagram" class="w-6 h-6">
+    </div>
+</label>
+
+                        
+                        <!-- X Option -->
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="platform" value="x" class="hidden" onchange="updatePlatformStyle(this)">
+                            <div class="platform-selector p-3 rounded-lg cursor-pointer transition-all" data-platform="x">
+                                <img src="css/imgs/x.png" alt="X" class="w-6 h-6">
+                            </div>
+                        </label>
+            
+                        <!-- Discord Option -->
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="platform" value="discord" class="hidden" onchange="updatePlatformStyle(this)">
+                            <div class="platform-selector p-3 rounded-lg cursor-pointer transition-all" data-platform="discord">
+                                <img src="css/imgs/discord.png" alt="Discord" class="w-6 h-6">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            
                 <div class="flex space-x-4">
                     <!-- Username Field -->
                     <div class="flex-1">
@@ -52,7 +86,6 @@
                 </div>
             </form>
             
-
             <!-- Program Form -->
             <form id="program-form" class="space-y-6 hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -85,61 +118,31 @@
 
 
             <!-- Preview Section (Only shown for users) -->
-            <div id="user-preview" class="mt-8">
-                <h5 class="text-lg font-mono font-bold text-white mb-4" style="font-family: 'Poppins', serif;">Preview</h5>
-                <div class="bg-blue-800 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-11 h-11 bg-white rounded-full"></div>
-                        </div>
-                        <div class="flex-1 min-w-0 ml-4">
-                            <p id="preview-username" class="text-sm font-medium text-white truncate" style="font-family: 'Poppins', serif;">
-                                Preview Username
-                            </p>
-                            <p id="preview-description" class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
-                                Description will appear here
-                            </p>
-                        </div>
-                        <div id="preview-price" class="text-base font-semibold text-white" style="font-family: 'Poppins', serif;">
-                            $0
-                        </div>
-                    </div>
-                </div>
+            <!-- Preview Section -->
+<div id="user-preview" class="mt-8">
+    <h5 class="text-lg font-mono font-bold text-white mb-4" style="font-family: 'Poppins', serif;">Preview</h5>
+    <div class="bg-blue-800 p-4 rounded-lg">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <img src="css/imgs/instagram.png" alt="Instagram Preview" class="w-11 h-11">
+            </div>
+            <div class="flex-1 min-w-0 ml-4">
+                <p id="preview-username" class="text-sm font-medium text-white truncate" style="font-family: 'Poppins', serif;">
+                    Preview Username
+                </p>
+                <p id="preview-description" class="text-sm text-stone-100 mt-1" style="font-family: 'Poppins', serif;">
+                    Description will appear here
+                </p>
+            </div>
+            <div id="preview-price" class="text-base font-semibold text-white" style="font-family: 'Poppins', serif;">
+                $0
             </div>
         </div>
+    </div>
+</div>
+
     </main>
-
-
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get input elements
-    const usernameInput = document.getElementById('username');
-    const priceInput = document.getElementById('user-price');
-    const descriptionInput = document.getElementById('user-description');
-
-    // Get preview elements
-    const previewUsername = document.getElementById('preview-username');
-    const previewPrice = document.getElementById('preview-price');
-    const previewDescription = document.getElementById('preview-description');
-    const charCount = document.getElementById('char-count');
-
-    // Update preview on username change
-    usernameInput.addEventListener('input', function(e) {
-        previewUsername.textContent = e.target.value || 'Preview Username';
-    });
-
-    // Update preview on price change
-    priceInput.addEventListener('input', function(e) {
-        previewPrice.textContent = `$${e.target.value || '0'}`;
-    });
-
-    // Update preview on description change
-    descriptionInput.addEventListener('input', function(e) {
-        previewDescription.textContent = e.target.value || 'Description will appear here';
-        charCount.textContent = `${e.target.value.length}/50`;
-    });
-});
-    </script>
+    <script src="/css/js/profile.js"></script>
 </body>
 </html>
 <%- include('partials/footer') -%>

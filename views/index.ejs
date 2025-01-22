@@ -1,94 +1,133 @@
 <%- include('partials/header') -%>
-
+ 
 <body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
 
-
-   <!-- Main Content -->
-<main class="flex-grow flex flex-col justify-center items-center px-4">
-    <h1 class="text-white mt-5 mb-5 text-4xl sm:text-6xl text-center" style="font-family: 'Poppins', serif;">
-        Choose Access Type
-    </h1>
-    <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Guest Option -->
-            <div class="p-6 rounded-lg transition-all duration-300 hover:bg-opacity-90" style="background-color: rgba(30, 28, 27, 255)">
-                <div class="flex items-center mb-4">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-user-circle text-4xl text-gray-400"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h2 class="text-xl font-bold" style="font-family: 'Poppins', serif;">Guest Access</h2>
-                        <p class="text-stone-100 text-sm mt-1" style="font-family: 'Poppins', serif;">Browse without an account</p>
-                    </div>
-                </div>
-                <a href="/feed" class="block w-full text-center py-3 rounded-lg transition-all duration-300 bg-gray-700 hover:bg-gray-600 text-white" style="font-family: 'Poppins', serif;">
-                    Continue as Guest
-                </a>
-            </div>
-
-            <!-- Seller Option -->
-            <div class="p-6 rounded-lg transition-all duration-300 hover:bg-opacity-90" style="background-color: rgba(30, 28, 27, 255)">
-                <div class="flex items-center mb-4">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-store text-4xl text-blue-500"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h2 class="text-xl font-bold" style="font-family: 'Poppins', serif;">Seller Account</h2>
-                        <p class="text-stone-100 text-sm mt-1" style="font-family: 'Poppins', serif;">Manage your products</p>
-                    </div>
-                </div>
-                <a href="/login" class="block w-full text-center py-3 rounded-lg transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white" style="font-family: 'Poppins', serif;">
-                    Login as Seller
-                </a>
-            </div>
+    <header class="p-4 text-white flex items-center justify-between">
+        <!-- Logo -->
+        <div class="w-36 ml-5 mt-5">
+            <a href="/"><img src="/css/imgs/myuncle.png" alt=""></a>
         </div>
-    </div>
+    
+        <!-- Hamburger Menu (visible on small screens) -->
+        <button id="menu-toggle" class="block sm:hidden focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        
+        <div class="text-2xl space-x-2 mr-24">
+            <a href="/feed" class="text-white mr-5">
+                <span>Users</span>
+            </a>
+            <a href="/programs" class="text-white mr-5">
+                <span>Programs</span>
+            </a>
+        </div>
+    
+        <!-- Icons for small screens (hidden on desktop) -->
+        <div class="text-3xl space-x-4">
+            <% if (user) { %>
+                <a href="/profile" class="text-blue-500 mr-5">
+                    <i class="fas fa-user"></i>
+                </a>
+            <% } else { %>
+                <a href="/login" class="text-blue-500 mr-5">
+                    <i class="fas fa-sign-in-alt"></i>
+                </a>
+            <% } %>
+            
+        </div>
+    </header>
+    
+  
+  <!-- Sidebar Menu (hidden by default) -->
+  <aside id="sidebar" class="fixed inset-y-0 right-0 bg-gray-900 bg-opacity-90 transform translate-x-full transition-transform duration-300 w-64 sm:w-80 lg:w-96">
+      <div class="p-4">
+          <!-- Close Button -->
+          <button id="close-sidebar" class="text-white text-xl">
+              <i class="fas fa-times"></i>
+          </button>
+  
+          <!-- Navigation Links for Sidebar (appear when opened) -->
+          <nav class="mt-4 flex flex-col space-y-4">
+              <a href="/" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Home</a>
+              <a href="/products" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Products</a>
+              <a href="/login" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Blog</a>
+          </nav>
+  
+          <!-- Icons inside the Sidebar (Removed search and cart) -->
+          <div class="mt-4 flex flex-col items-center space-y-4">
+              <a href="/admin" class="text-white text-lg hover:text-yellow-500 transition-all duration-300">
+                  <i class="fas fa-user"></i>
+              </a>
+          </div>
+      </div>
+  </aside>
+  
+  
+  <!-- JavaScript for the Hamburger Menu -->
+  <script>
+      const menuToggle = document.getElementById('menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const closeSidebar = document.getElementById('close-sidebar');
+  
+      menuToggle.addEventListener('click', () => {
+          sidebar.classList.remove('translate-x-full'); // Show the sidebar
+      });
+  
+      closeSidebar.addEventListener('click', () => {
+          sidebar.classList.add('translate-x-full'); // Hide the sidebar
+      });
+  </script>
+  
+  
+
+
+<!-- Heading -->
+<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Users</h1>
+
+<!-- Main Content -->
+<main class="flex-grow flex justify-center items-center px-4">
+  <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+      <div class="flex items-center justify-between mb-4">
+          <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">Available</h5>
+          <a href="/feed"><h4 class="flex justify-end">View all</h4></a>
+      </div>
+      <div class="flow-root">
+          <!-- Replace your static ul with this dynamic one -->
+          <ul role="list" class="divide-y divide-gray-200">
+            <% feedItems.slice(0, 5).forEach(function(item) { %>
+                <li class="py-3 sm:py-4">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <img class="w-11 h-11" src="css/imgs/instagram.png" alt="User image">
+                        </div>
+                        <div class="flex-1 min-w-0 ml-4">
+                            <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                               <%= item.username %>
+                            </p>
+                            <p class="text-sm text-stone-100 mt-1">
+                                <%= item.description %>
+                            </p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-lg font-semibold text-gray-900 dark:text-white mr-4">
+                                $<%= item.price %>
+                            </div>
+                            <% if (user && item.createdBy && item.createdBy.equals(user._id)) { %>
+                                <form action="/feedItem/<%= item._id %>?_method=DELETE" method="POST" class="inline">
+                                    <button type="submit" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </div>
+                </li>
+            <% }); %>
+          </ul>
+          
+      </div>
+  </div>
 </main>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-screen-lg mx-auto px-4 py-6 sm:py-8">
-        <hr class="my-6 border-gray-700 lg:my-8" />
-        <div class="md:flex md:justify-between">
-            <div>
-                <a href="/" class="text-2xl sm:text-4xl font-bold hover:text-red-500 transition-all duration-300 block" style="font-family: 'Poppins', serif;">
-                    YourLogo
-                </a>
-                <span class="text-sm text-gray-400 block mt-5" style="font-family: 'Poppins', serif;">
-                    © 2025 YourLogo™. <br> Description.
-                </span>
-            </div>
-            <div class="grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-3">
-                <div>
-                    <h2 class="mb-4 text-sm font-semibold uppercase text-white">Resources</h2>
-                    <ul class="text-gray-400 font-medium">
-                        <li class="mb-2">
-                            <a href="https://flowbite.com/" class="hover:underline">RoniDev</a>
-                        </li>
-                        <li>
-                            <a href="https://tailwindcss.com/" class="hover:underline">NateDev</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript for Sidebar -->
-    <script>
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const closeSidebar = document.getElementById('close-sidebar');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.remove('translate-x-full');
-        });
-
-        closeSidebar.addEventListener('click', () => {
-            sidebar.classList.add('translate-x-full');
-        });
-    </script>
 </body>
-</html>
-    
-
 <%- include('partials/footer') -%>

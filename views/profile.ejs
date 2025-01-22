@@ -3,15 +3,17 @@
 <body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
     <!-- Header -->
     <header class="p-4 text-white flex items-center justify-between">
-        <div class="text-lg sm:text-2xl font-bold" style="font-family: 'Poppins', serif;">
-            <a href="/feed" class="hover:text-red-500 transition-all duration-300">YourLogo</a>
+        <!-- Logo -->
+        <div class="w-36 ml-5 mt-5">
+            <a href="/"><img src="/css/imgs/myuncle.png" alt=""></a>
         </div>
-        
-        <button id="menu-toggle" class="block sm:hidden focus:outline-none">
-            <i class="fas fa-bars text-xl"></i>
-        </button>
-
     
+        <!-- Icons for small screens (hidden on desktop) -->
+        <div class="text-3xl space-x-4">
+                <a href="/logout" class="text-red-500 mr-5">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+        </div>
     </header>
 
     <!-- Heading -->
@@ -24,24 +26,32 @@
 
             <!-- User Form -->
 
-<form id="user-form" class="space-y-6" action="/createFeedItem" method="POST">
-    <!-- ... your existing form fields ... -->
-    <div>
-        <label for="username" class="block mb-2 text-sm font-medium text-white">Username</label>
-        <input type="text" name="username" id="username" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" required>
-    </div>
-    <div>
-        <label for="user-price" class="block mb-2 text-sm font-medium text-white">Price ($)</label>
-        <input type="number" name="price" id="user-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" required>
-    </div>
-    <div>
-        <label for="user-description" class="block mb-2 text-sm font-medium text-white">Description</label>
-        <textarea name="description" id="user-description" maxlength="50" rows="2" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" required></textarea>
-    </div>
-    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-        Add Content
-    </button>
-</form>
+            <form id="user-form" class="space-y-6" action="/createFeedItem" method="POST">
+                <div class="flex space-x-4">
+                    <!-- Username Field -->
+                    <div class="flex-1">
+                        <label for="username" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Username</label>
+                        <input type="text" name="username" id="username" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                    <!-- Price Field -->
+                    <div class="flex-1">
+                        <label for="user-price" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Price ($)</label>
+                        <input type="number" name="price" id="user-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                    </div>
+                </div>
+                <!-- Description Field -->
+                <div>
+                    <label for="user-description" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Description</label>
+                    <textarea name="description" id="user-description" maxlength="50" rows="2" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required></textarea>
+                </div>
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
+                        Add Content
+                    </button>
+                </div>
+            </form>
+            
 
             <!-- Program Form -->
             <form id="program-form" class="space-y-6 hidden">
@@ -73,17 +83,11 @@
                 </div>
             </form>
 
-            <!-- Submit Button -->
-            <div class="flex justify-end mt-6">
-                <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
-                    Add Content
-                </button>
-            </div>
 
             <!-- Preview Section (Only shown for users) -->
             <div id="user-preview" class="mt-8">
                 <h5 class="text-lg font-mono font-bold text-white mb-4" style="font-family: 'Poppins', serif;">Preview</h5>
-                <div class="bg-purple-800 p-4 rounded-lg">
+                <div class="bg-blue-800 p-4 rounded-lg">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="w-11 h-11 bg-white rounded-full"></div>
@@ -105,20 +109,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-screen-lg mx-auto px-4 py-6 sm:py-8">
-        <hr class="my-6 border-gray-200 dark:border-gray-700 lg:my-8" />
-        <div class="md:flex md:justify-between">
-            <div>
-                <a href="/" class="text-2xl sm:text-4xl font-bold hover:text-red-500 transition-all duration-300 block" style="font-family: 'Poppins', serif;">
-                    YourLogo
-                </a>
-                <span class="text-sm text-gray-500 dark:text-gray-400 block mt-5" style="font-family: 'Poppins', serif;">
-                    © 2025 YourLogo™. <br> Description.
-                </span>
-            </div>
-        </div>
-    </footer>
 
     <script>
 document.addEventListener('DOMContentLoaded', function() {

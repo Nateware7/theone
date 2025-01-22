@@ -1,40 +1,89 @@
 <%- include('partials/header') -%>
+<body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
 
-<main class="container">
-  <div class="row justify-content-center">
-    <section class="col-6 mt-5">
-      <% if (locals.messages.errors) { %> <% messages.errors.forEach( el => { %>
-      <div class="alert alert-danger"><%= el.msg %></div>
-      <% }) %> <% } %> <% if (locals.messages.info) { %> <%
-      messages.info.forEach( el => { %>
-      <div class="alert alert-info"><%= el.msg %></div>
-      <% }) %> <% } %>
-      <form action="/login" method="POST">
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Email address</label
-          >
-          <input
-            type="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            name="email"
-          />
+  <!-- Header -->
+  <header class="p-4 text-white flex items-center justify-between">
+      <!-- Logo -->
+      <div class="w-36 ml-5 mt-5">
+          <a href="/"><img src="/css/imgs/myuncle.png" alt=""></a>
+      </div>
+      
+  </header>
+  
+  <!-- Sidebar Menu (hidden by default) -->
+  <aside id="sidebar" class="fixed inset-y-0 right-0 bg-gray-900 bg-opacity-90 transform translate-x-full transition-transform duration-300 w-64 sm:w-80 lg:w-96">
+      <div class="p-4">
+          <!-- Close Button -->
+          <button id="close-sidebar" class="text-white text-xl">
+              <i class="fas fa-times"></i>
+          </button>
+  
+          <!-- Navigation Links for Sidebar (appear when opened) -->
+          <nav class="mt-4 flex flex-col space-y-4">
+              <a href="/" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Home</a>
+              <a href="/products" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Products</a>
+              <a href="/login" class="text-white text-lg hover:text-yellow-400 transition-all duration-300">Blog</a>
+          </nav>
+  
+          <!-- Icons inside the Sidebar (Removed search and cart) -->
+          <div class="mt-4 flex flex-col items-center space-y-4">
+              <a href="/admin" class="text-white text-lg hover:text-yellow-500 transition-all duration-300">
+                  <i class="fas fa-user"></i>
+              </a>
+          </div>
+      </div>
+  </aside>
+<!-- Heading -->
+<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Login</h1>
+
+<!-- Main Content -->
+<main class="flex-grow flex justify-center items-center px-4">
+    <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+        <div class="flex items-center justify-between mb-4">
+            <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white mb-5" style="font-family: 'Poppins', serif;">Login Form</h5>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            name="password"
-          />
+        <div class="flow-root">
+            <form action="/login" method="POST" class="space-y-6">
+                <!-- Email Field -->
+                <div class="flex flex-col space-y-2">
+                    <label for="exampleInputEmail1" class="text-white text-sm font-medium mb-2" style="font-family: 'Poppins', serif;">Email address</label>
+                    <input 
+                        type="email" 
+                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" 
+                        id="exampleInputEmail1" 
+                        aria-describedby="emailHelp" 
+                        name="email" 
+                        style="background-color: rgba(30, 28, 27, 255);" 
+                        required
+                    />
+                </div>
+            
+                <!-- Password Field -->
+                <div class="flex flex-col space-y-2">
+                    <label for="exampleInputPassword1" class="text-white text-sm font-medium mb-2" style="font-family: 'Poppins', serif;">Password</label>
+                    <input 
+                        type="password" 
+                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" 
+                        id="exampleInputPassword1" 
+                        name="password" 
+                        style="background-color: rgba(30, 28, 27, 255);" 
+                        required
+                    />
+                </div>
+            
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
+                        Submit
+                    </button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </section>
-  </div>
+    </div>
 </main>
+
+
+</body>
+
 
 <%- include('partials/footer') -%>

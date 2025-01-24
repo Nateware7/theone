@@ -1,0 +1,82 @@
+<%- include('partials/header') -%>
+<body class="text-white min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
+    <header class="p-4 text-white flex items-center justify-between">
+        <div class="w-36 ml-5 mt-5">
+            <a href="/"><img src="/css/imgs/myuncle.png" alt="Logo"></a>
+        </div>
+        <div class="text-3xl space-x-4">
+            <% if (user) { %>
+                <a href="/profile" class="text-blue-500 mr-5">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            <% } else { %>
+                <a href="/login" class="text-white mr-5">Login</a>
+            <% } %>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="container mx-auto px-4 py-8 max-w-4xl">
+            <div class="bg-[#1E1C1B] rounded-2xl shadow-2xl overflow-hidden">
+                <div class="relative">
+                    <img 
+                        src="<%= program.image %>" 
+                        alt="<%= program.title %>" 
+                        class="w-full h-[500px] object-cover filter brightness-75 transition-all duration-300 hover:brightness-90"
+                    >
+                    <div class="absolute bottom-4 right-4 bg-blue-600/80 text-white px-4 py-2 rounded-lg">
+                        $<%= program.price %>
+                    </div>
+                </div>
+                
+                <div class="p-8 space-y-6">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white leading-tight">
+                        <%= program.title %>
+                    </h1>
+                    
+                    <p class="text-gray-200 leading-relaxed">
+                        <%= program.description %>
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h2 class="text-xl font-semibold mb-3 text-blue-400">Tools</h2>
+                            <div class="flex flex-wrap gap-2">
+                                <% program.tags.forEach(tag => { %>
+                                    <span class="bg-blue-700/50 text-white px-3 py-1 rounded-full text-sm transition hover:bg-blue-600">
+                                        <%= tag %>
+                                    </span>
+                                <% }); %>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h2 class="text-xl font-semibold mb-3 text-blue-400">Features</h2>
+                            <ul class="space-y-2 text-gray-300">
+                                <% program.features.forEach(feature => { %>
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <%= feature %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex space-x-4">
+                        <a href="/program" class="flex-grow text-center bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">
+                            Back to Programs
+                        </a>
+                        <a href="/purchase/<%= program.id %>" class="flex-grow text-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<%- include('partials/footer') -%>

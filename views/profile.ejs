@@ -23,7 +23,25 @@
     <main class="flex-grow flex justify-center items-center px-4 pb-8">
         <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
 
-
+            <!-- Form Type Selection -->
+<div class="mb-8">
+    <label class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Select Form Type</label>
+    <div class="flex space-x-4">
+      <label class="inline-flex items-center">
+        <input type="radio" name="formType" value="user" class="hidden" onchange="toggleForm(this)" checked>
+        <div class="form-selector p-3 rounded-lg cursor-pointer transition-all selected">
+          User Content
+        </div>
+      </label>
+      
+      <label class="inline-flex items-center">
+        <input type="radio" name="formType" value="program" class="hidden" onchange="toggleForm(this)">
+        <div class="form-selector p-3 rounded-lg cursor-pointer transition-all">
+          Program Content
+        </div>
+      </label>
+    </div>
+  </div>
             <!-- User Form -->
 
             <form id="user-form" class="space-y-6" action="/createFeedItem" method="POST">
@@ -87,34 +105,40 @@
             </form>
             
             <!-- Program Form -->
-            <form id="program-form" class="space-y-6 hidden">
+            <form id="program-form" class="space-y-6 hidden" action="/createProgramItem" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label for="title" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Program Title</label>
-                        <input type="text" id="title" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                        <input type="text" name="title" id="title" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
                     </div>
                     <div class="md:col-span-2">
                         <label for="description" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Description</label>
-                        <textarea id="description" rows="3" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required></textarea>
+                        <textarea name="description" id="description" rows="3" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required></textarea>
                     </div>
                     <div>
                         <label for="program-price" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Price ($)</label>
-                        <input type="number" id="program-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
+                        <input type="number" name="price" id="program-price" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" required>
                     </div>
                     <div>
                         <label for="tags" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Tags (comma-separated)</label>
-                        <input type="text" id="tags" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="e.g., JavaScript, Web, Tool">
+                        <input type="text" name="tags" id="tags" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="e.g., JavaScript, Web, Tool">
                     </div>
                     <div class="md:col-span-2">
                         <label for="image" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Image Upload</label>
-                        <input type="file" id="image" accept="image/*" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
+                        <input type="file" name="image" id="image" accept="image/*" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
                     </div>
                     <div class="md:col-span-2">
                         <label for="features" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Features (one per line)</label>
-                        <textarea id="features" rows="4" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+                        <textarea name="features" id="features" rows="4" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
                     </div>
                 </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
+                        Add Program
+                    </button>
+                </div>
             </form>
+            
 
 
             <!-- Preview Section (Only shown for users) -->

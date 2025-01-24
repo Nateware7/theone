@@ -4,6 +4,7 @@ const authController = require("../controllers/auth");
 const homeController = require("../controllers/home");
 const postsController = require("../controllers/posts");
 const { ensureAuth, ensureGuest, allowGuestAccess } = require("../middleware/auth");
+const upload = require("../middleware/multer");
 
 // Main Routes
 router.get("/", homeController.getIndex);
@@ -17,5 +18,9 @@ router.post("/signuping", authController.postSignuping);
 // Add this route
 router.post("/createFeedItem", ensureAuth, postsController.createFeedItem);
 router.delete("/feedItem/:id", ensureAuth, postsController.deleteFeedItem);
+// Program Routes
+router.get("/program", allowGuestAccess, postsController.getProgram); // List all programs
+router.get("/program/:id", allowGuestAccess, postsController.getProgram); // Single program
 
+router.post("/createProgramItem", upload.single("image"), ensureAuth, postsController.createProgramItem);
 module.exports = router;

@@ -1,0 +1,57 @@
+<%- include('partials/header') -%>
+<body class="text-white min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
+    <header class="p-4 text-white flex items-center justify-between">
+        <div class="w-36 ml-5 mt-5">
+            <a href="/"><img src="/css/imgs/myuncle.png" alt="Logo"></a>
+        </div>
+        <div class="text-3xl space-x-4">
+            <% if (user) { %>
+                <a href="/profile" class="text-blue-500 mr-5">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            <% } else { %>
+                <a href="/login" class="text-white mr-5">Login</a>
+            <% } %>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8 text-center text-white">Available Programs</h1>
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <% programs.forEach(program => { %>
+                    <div class="bg-neutral-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                        <div class="relative">
+                            <img
+                                src="<%= program.image %>"
+                                alt="<%= program.title %>"
+                                class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                        </div>
+            
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-2xl font-bold text-white line-clamp-2"><%= program.title %></h2>
+                                <span class="text-blue-600 text-xl font-medium">$<%= program.price %></span>
+                            </div>
+                            
+                            <p class="text-neutral-400 text-sm line-clamp-3 min-h-[3rem]"><%= program.description %></p>
+                            
+                            <div>
+                                <a 
+                                    href="/program/<%= program._id %>" 
+                                    class="w-full text-center block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors duration-300 ease-in-out"
+                                >
+                                    View Program Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+            
+        </div>
+    </main>
+</body>
+</html>
+<%- include('partials/footer') -%> 

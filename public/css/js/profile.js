@@ -52,3 +52,24 @@ default:
     previewImage.alt = "No Preview";
 }
 }
+
+function toggleForm(radio) {
+    const userForm = document.getElementById('user-form');
+    const programForm = document.getElementById('program-form');
+    const userPreview = document.getElementById('user-preview');
+    
+    document.querySelectorAll('.form-selector').forEach(selector => {
+        selector.classList.remove('selected');
+    });
+    radio.nextElementSibling.classList.add('selected');
+
+    if (radio.value === 'user') {
+        userForm.classList.remove('hidden');
+        programForm.classList.add('hidden');
+        userPreview.classList.remove('hidden');
+    } else {
+        userForm.classList.add('hidden');
+        programForm.classList.remove('hidden');
+        userPreview.classList.add('hidden');
+    }
+}

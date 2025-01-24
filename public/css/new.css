@@ -21,3 +21,12 @@
     background-color: rgba(147, 51, 234, 0.2);
     box-shadow: 0 0 0 2px rgb(147, 51, 234);
 }
+
+.form-selector {
+    background-color: rgba(30, 28, 27, 255);
+    color: white;
+}
+
+.form-selector.selected {
+    background-color: rgb(0, 0, 0);
+}

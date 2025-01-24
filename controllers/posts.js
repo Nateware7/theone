@@ -1,6 +1,9 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
 const FeedItem = require("../models/FeedItem");
+const ProgramItem = require("../models/ProgramItem");
+
+// Add this to the module.exports
 
 module.exports = {
   getProfile: async (req, res) => {
@@ -124,4 +127,59 @@ module.exports = {
       res.redirect("/profile");
     }
   },
+  // posts.js - Update the createProgramItem function
+  createProgramItem: async (req, res) => {
+    try {
+      // Validate file upload
+      if (!req.file) {
+        return res.status(400).json({ error: "Image file is required" });
+      }
+
+      // Validate required fields
+      const { title, description, price, tags, features } = req.body;
+      if (!title || !description || !price) {
+        return res.status(400).json({ error: "Title, description, and price are required" });
+      }
+
+      // Upload image to cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+
+      // Create program item
+      const programItem = await ProgramItem.create({
+        title,
+        description,
+        price: parseFloat(price),
+        tags: tags ? tags.split(",").map(tag => tag.trim()) : [],
+        image: result.secure_url,
+        cloudinaryId: result.public_id,
+        features: features ? features.split(",").map(f => f.trim()) : [],
+        createdBy: req.user.id
+      });
+
+      console.log("Program item created:", programItem._id);
+      res.redirect("/program");
+    } catch (err) {
+      console.error("Create program error:", err);
+      res.status(500).json({ error: err.message });
+    }
+  },  
+  getProgram: async (req, res) => {
+    try {
+      if (req.params.id) {
+        const program = await ProgramItem.findById(req.params.id);
+        if (!program) {
+          return res.status(404).send("Program not found");
+        }
+        // Render the new programDetail template for single item view
+        res.render("programDetail.ejs", { program, user: req.isAuthenticated() ? req.user : null });
+      } else {
+        const programs = await ProgramItem.find().sort({ createdAt: -1 });
+        res.render("program.ejs", { programs, user: req.isAuthenticated() ? req.user : null });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Server Error");
+    }
+  },
+  
 };

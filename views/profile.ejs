@@ -124,12 +124,32 @@
                         <input type="text" name="tags" id="tags" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="e.g., JavaScript, Web, Tool">
                     </div>
                     <div class="md:col-span-2">
-                        <label for="image" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Image Upload</label>
-                        <input type="file" name="image" id="image" accept="image/*" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
-                    </div>
-                    <div class="md:col-span-2">
                         <label for="features" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Features (one per line)</label>
                         <textarea name="features" id="features" rows="4" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="imageUpload" class="block mb-2 text-sm font-medium text-white" style="font-family: 'Poppins', serif;">Image Upload</label>
+                        <input type="file" name="image" id="imageUpload" accept="image/*" class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" style="background-color: rgba(30, 28, 27, 255);">
+                    </div>
+                    
+                    <!-- Cropper Container (Hidden by default) -->
+<div id="cropperContainer" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
+    <div class="bg-black p-6 rounded-lg max-w-3xl w-full m-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h2 class="text-white text-xl mb-4 text-center" style="font-family: 'Poppins', serif;">Crop Your Image</h2>
+        <div class="mb-4 flex justify-center items-center">
+            <img id="imageToCrop" class="max-w-full max-h-[70vh] object-contain" src="" alt="Image to crop">
+        </div>
+        <div class="flex justify-center space-x-4">
+            <button id="saveCroppedImage" class="bg-white text-black px-4 py-2 rounded">Save Crop</button>
+            <button id="cancelCrop" class="bg-red-700 text-white px-4 py-2 rounded">Cancel</button>
+        </div>
+    </div>
+</div>
+                    <!-- Cropped Image Preview -->
+                    <div id="finalImagePreview" class="hidden mt-4">
+                        <h3 class="text-white mb-2" style="font-family: 'Poppins', serif;">Cropped Image Preview</h3>
+                        <img id="croppedPreview" class="max-w-full rounded" src="" alt="Cropped image preview">
                     </div>
                 </div>
                 <div class="flex justify-end">
@@ -167,6 +187,7 @@
 
     </main>
     <script src="/css/js/profile.js"></script>
+    <script src="/css/js/imageCropper.js"></script>
 </body>
 </html>
 <%- include('partials/footer') -%>

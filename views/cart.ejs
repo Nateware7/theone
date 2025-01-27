@@ -80,9 +80,11 @@
                             <span>$<%= cart.total %></span>
                         </div>
                     </div>
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-6 rounded-lg">
-                        Proceed to Checkout
-                    </button>
+                    <form action="/create-checkout-session" method="POST">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-6 rounded-lg">
+                            Proceed to Checkout
+                        </button>
+                    </form>
                 </div>
             </div>
         <% } %>

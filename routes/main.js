@@ -6,6 +6,9 @@ const postsController = require("../controllers/posts");
 const { ensureAuth, ensureGuest, allowGuestAccess } = require("../middleware/auth");
 const upload = require("../middleware/multer");
 const cartRoutes = require("../routes/cart");
+const checkoutRoutes = require('../routes/checkout');
+
+
 
 // Main Routes
 router.get("/", homeController.getIndex);
@@ -26,4 +29,6 @@ router.post("/createProgramItem", upload.single("image"), ensureAuth, postsContr
 
 //cart routes
 router.use("/", cartRoutes); // Add this line
+// Add after other route declarations
+router.use('/', checkoutRoutes);
 module.exports = router;

@@ -1,24 +1,17 @@
 <%- include('partials/header') -%>
-
 <body class="text-white flex flex-col min-h-screen bg-customDark font-poppins">
-
-
     <header class="p-4 text-white flex items-center justify-between">
         <!-- Logo -->
         <div class="w-36 ml-5 mt-5">
             <a href="/"><img src="/css/imgs/myuncle.png" alt=""></a>
         </div>
-    
+
         <!-- Hamburger Menu (visible on small screens) -->
         <button id="menu-toggle" class="block sm:hidden focus:outline-none">
             <i class="fas fa-bars text-xl"></i>
         </button>
-        
-    
-        <!-- Icons for small screens (hidden on desktop) -->
-        <div class="text-3xl space-x-4">
-            <!-- Show user emblem only when logged in -->
-           <!-- Icons for small screens (hidden on desktop) -->
+
+        <!-- Icons for small screens -->
         <div class="text-3xl space-x-4">
             <% if (user) { %>
                 <a href="/profile" class="text-blue-500 mr-5">
@@ -29,15 +22,12 @@
                     <i class="fas fa-sign-in-alt"></i>
                 </a>
             <% } %>
-            
-        </div>
         </div>
     </header>
-
+    
     <main class="flex-grow container mx-auto px-4 py-8">
         <h1 class="text-4xl mb-8 text-center">Your Cart</h1>
-
-        <% if (cart.items.length === 0) { %>
+        <% if (!cart.items || cart.items.length === 0) { %>
             <div class="text-center text-xl">
                 Your cart is empty. 
                 <a href="/feed" class="text-blue-500 hover:underline">Continue Shopping</a>
@@ -50,38 +40,32 @@
                         <div class="bg-customDark p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center">
                                 <% 
-                                let item = cartItem.item;
-                                let platformImage;
-                                if (item.platform) {
-                                    platformImage = item.platform === 'instagram' ? 'instagram.png' :
-                                                    item.platform === 'x' ? 'x.png' :
-                                                    item.platform === 'discord' ? 'discord.png' :
-                                                    'default.png';
-                                } else {
-                                    platformImage = 'default.png';
+                                let platformImage = 'default.png';
+                                if (cartItem.platform) {
+                                    if (cartItem.platform === 'instagram') platformImage = 'instagram.png';
+                                    else if (cartItem.platform === 'x') platformImage = 'x.png';
+                                    else if (cartItem.platform === 'discord') platformImage = 'discord.png';
                                 }
                                 %>
                                 <img class="w-16 h-16 mr-4" src="css/imgs/<%= platformImage %>" alt="Item image">
                                 <div>
-                                    <h3 class="text-xl"><%= item.username || item.title %></h3>
-                                    <p class="text-gray-400"><%= item.description %></p>
+                                    <h3 class="text-xl"><%= cartItem.username %></h3>
+                                    <p class="text-gray-400"><%= cartItem.description %></p>
                                     <p class="text-lg font-semibold">$<%= cartItem.price %></p>
                                 </div>
                             </div>
-                           <!-- Inside your cart item loop -->
-<div class="flex items-center">
-    <form action="/remove-from-cart" method="POST" class="mr-4">
-        <input type="hidden" name="itemId" value="<%= cartItem.item._id %>">
-        <input type="hidden" name="itemType" value="<%= cartItem.itemModel === 'FeedItem' ? 'feedItem' : 'programItem' %>">
-        <button type="submit" class="text-red-500 hover:text-red-700 text-xl">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
-</div>
+                            <div class="flex items-center">
+                                <form action="/remove-from-cart" method="POST" class="mr-4">
+                                    <input type="hidden" name="itemId" value="<%= cartItem.itemId %>">
+                                    <input type="hidden" name="itemType" value="<%= cartItem.itemType %>">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 text-xl">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     <% }); %>
                 </div>
-
                 <!-- Order Summary Column -->
                 <div class="bg-customDark p-6 rounded-lg h-fit">
                     <h2 class="text-2xl mb-4">Order Summary</h2>
@@ -90,11 +74,10 @@
                             <span>Subtotal</span>
                             <span>$<%= cart.total %></span>
                         </div>
-
                         <hr class="border-gray-600">
                         <div class="flex justify-between font-bold">
                             <span>Total</span>
-                            <span>$<%= (cart.total) %></span>
+                            <span>$<%= cart.total %></span>
                         </div>
                     </div>
                     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-6 rounded-lg">
@@ -104,7 +87,5 @@
             </div>
         <% } %>
     </main>
-
     <%- include('partials/footer') -%>
 </body>
-

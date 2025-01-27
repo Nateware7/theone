@@ -3,68 +3,69 @@ const FeedItem = require('../models/FeedItem');
 const ProgramItem = require('../models/ProgramItem');
 
 module.exports = {
-   addToCart: async (req, res) => {
+  addToCart: async (req, res) => {
     try {
       const { itemId, itemType } = req.body;
-      
+
+      // Initialize session cart if it doesn't exist
+      if (!req.session.cart) {
+        req.session.cart = {
+          items: [],
+          total: 0
+        };
+      }
+
       const Model = itemType === 'feedItem' ? FeedItem : ProgramItem;
       const item = await Model.findById(itemId);
-      
+
       if (!item) {
         return res.status(404).json({ error: 'Item not found' });
       }
-      
-      let cart = await Cart.findOne({ user: req.user._id });
-      
-      if (!cart) {
-        cart = new Cart({ 
-          user: req.user._id, 
-          items: [],
-          total: 0 
-        });
-      }
-      
+
       // Check if item already in cart
-      const existingItemIndex = cart.items.findIndex(
-        cartItem => 
-          cartItem.item.toString() === itemId && 
-          cartItem.itemModel === (itemType === 'feedItem' ? 'FeedItem' : 'ProgramItem')
+      const existingItemIndex = req.session.cart.items.findIndex(
+        cartItem => cartItem.itemId === itemId
       );
-      
+
       if (existingItemIndex > -1) {
         return res.status(400).json({ 
           error: 'This item is already in your cart' 
         });
       }
-      
-      // Add new item to cart
-      cart.items.push({
-        item: itemId,
-        itemModel: itemType === 'feedItem' ? 'FeedItem' : 'ProgramItem',
-        quantity: 1,
-        price: item.price
-      });
-      
-      // Recalculate total
-      cart.total = cart.items.reduce((total, cartItem) => 
-        total + (cartItem.price * cartItem.quantity), 0);
-      
-      await cart.save();
-      
-      res.status(200).json({ message: 'Item added to cart successfully' });
+
+      // Store complete item data in session
+      const cartItem = {
+        itemId: item._id,
+        itemType: itemType,
+        username: item.username || item.title,
+        description: item.description,
+        platform: item.platform,
+        price: item.price,
+        quantity: 1
+      };
+
+      req.session.cart.items.push(cartItem);
+      req.session.cart.total = req.session.cart.items.reduce((total, item) => 
+        total + (item.price * item.quantity), 0);
+
+      res.redirect('/cart');
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Server error adding to cart' });
     }
-},
-  
+  },
+
   getCart: async (req, res) => {
     try {
-      const cart = await Cart.findOne({ user: req.user._id })
-        .populate('items.item');
-      
+      if (!req.session.cart) {
+        req.session.cart = {
+          items: [],
+          total: 0
+        };
+      }
+
       res.render('cart', { 
-        cart: cart || { items: [], total: 0 }, 
+        cart: req.session.cart,
         user: req.user 
       });
     } catch (err) {
@@ -72,48 +73,28 @@ module.exports = {
       res.status(500).send('Server error retrieving cart');
     }
   },
-  
+
   removeFromCart: async (req, res) => {
     try {
       const { itemId, itemType } = req.body;
-      
-      if (!itemId || !itemType) {
-        return res.status(400).json({ error: 'Missing required fields' });
+
+      if (!req.session.cart) {
+        return res.redirect('/cart');
       }
 
-      // Find the user's cart
-      let cart = await Cart.findOne({ user: req.user._id });
-      
-      if (!cart) {
-        return res.status(404).json({ error: 'Cart not found' });
-      }
-      
-      // Find the item index in the cart
-      const itemIndex = cart.items.findIndex(item => 
-        item.item.toString() === itemId && 
-        item.itemModel === (itemType === 'feedItem' ? 'FeedItem' : 'ProgramItem')
+      // Remove item from cart
+      req.session.cart.items = req.session.cart.items.filter(
+        item => item.itemId.toString() !== itemId
       );
-      
-      if (itemIndex === -1) {
-        return res.status(404).json({ error: 'Item not found in cart' });
-      }
 
-      // Remove the item from the cart
-      cart.items.splice(itemIndex, 1);
-      
       // Recalculate total
-      cart.total = cart.items.reduce((total, item) => 
-        total + (item.price * item.quantity), 0
-      );
-      
-      // Save the updated cart
-      await cart.save();
-      
-      // Redirect back to cart page
+      req.session.cart.total = req.session.cart.items.reduce((total, item) => 
+        total + (item.price * item.quantity), 0);
+
       res.redirect('/cart');
     } catch (err) {
       console.error('Error removing item from cart:', err);
-      res.status(500).json({ error: 'Error removing item from cart' });
+      res.redirect('/cart');
     }
   }
 };

@@ -1,5 +1,5 @@
 <%- include('partials/header') -%>
-<body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
+<body class="text-white flex flex-col min-h-screen bg-customDark font-poppins">
 
   <!-- Header -->
   <header class="p-4 text-white flex items-center justify-between">
@@ -34,46 +34,44 @@
       </div>
   </aside>
 <!-- Heading -->
-<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Login</h1>
+<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl">Login</h1>
 
 <!-- Main Content -->
 <main class="flex-grow flex justify-center items-center px-4">
-    <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+    <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4 bg-customDark">
         <div class="flex items-center justify-between mb-4">
-            <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white mb-5" style="font-family: 'Poppins', serif;">Login Form</h5>
+            <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white mb-5">Login Form</h5>
         </div>
         <div class="flow-root">
             <form action="/login" method="POST" class="space-y-6">
                 <!-- Email Field -->
                 <div class="flex flex-col space-y-2">
-                    <label for="exampleInputEmail1" class="text-white text-sm font-medium mb-2" style="font-family: 'Poppins', serif;">Email address</label>
+                    <label for="exampleInputEmail1" class="text-white text-sm font-medium mb-2">Email address</label>
                     <input 
                         type="email" 
-                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" 
+                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 bg-customDark" 
                         id="exampleInputEmail1" 
                         aria-describedby="emailHelp" 
                         name="email" 
-                        style="background-color: rgba(30, 28, 27, 255);" 
                         required
                     />
                 </div>
             
                 <!-- Password Field -->
                 <div class="flex flex-col space-y-2">
-                    <label for="exampleInputPassword1" class="text-white text-sm font-medium mb-2" style="font-family: 'Poppins', serif;">Password</label>
+                    <label for="exampleInputPassword1" class="text-white text-sm font-medium mb-2">Password</label>
                     <input 
                         type="password" 
-                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" 
+                        class="text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 bg-customDark" 
                         id="exampleInputPassword1" 
                         name="password" 
-                        style="background-color: rgba(30, 28, 27, 255);" 
                         required
                     />
                 </div>
             
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" style="font-family: 'Poppins', serif;">
+                    <button type="submit" class="text-black bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         Submit
                     </button>
                 </div>

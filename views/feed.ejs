@@ -1,7 +1,7 @@
 <%- include('partials/header') -%>
- 
-<body class="text-white flex flex-col min-h-screen" style="background-color: rgba(30, 28, 27, 255);">
 
+<body class="text-white flex flex-col min-h-screen bg-customDark font-poppins">
+    <%- include('partials/notification') %>
     <header class="p-4 text-white flex items-center justify-between">
         <!-- Logo -->
         <div class="w-36 ml-5 mt-5">
@@ -24,9 +24,6 @@
     
         <!-- Icons for small screens (hidden on desktop) -->
         <div class="text-3xl space-x-4">
-            <!-- Show user emblem only when logged in -->
-           <!-- Icons for small screens (hidden on desktop) -->
-        <div class="text-3xl space-x-4">
             <% if (user) { %>
                 <a href="/profile" class="text-blue-500 mr-5">
                     <i class="fas fa-user"></i>
@@ -36,8 +33,9 @@
                     <i class="fas fa-sign-in-alt"></i>
                 </a>
             <% } %>
-            
-        </div>
+            <a href="/cart" class="text-blue-500 mr-5">
+                <i class="fas fa-shopping-bag"></i>
+            </a>
         </div>
     </header>
     
@@ -69,13 +67,13 @@
 
 
 <!-- Heading -->
-<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl" style="font-family: 'Poppins', serif;">Users</h1>
+<h1 class="flex justify-center items-center text-white mt-5 mb-5 text-4xl sm:text-6xl">Users</h1>
 
 <!-- Main Content -->
 <main class="flex-grow flex justify-center items-center px-4">
-  <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4" style="background-color: rgba(25, 23, 22, 250)">
+  <div class="w-full max-w-5xl rounded-lg shadow sm:p-8 p-4 bg-customDark" >
       <div class="flex items-center justify-between mb-4">
-          <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white" style="font-family: 'Poppins', serif;">Available</h5>
+          <h5 class="text-lg sm:text-xl font-mono font-bold text-gray-900 dark:text-white">Available</h5>
       </div>
       <div class="flow-root">
           <!-- Replace your static ul with this dynamic one -->
@@ -108,6 +106,13 @@
                             <div class="text-lg font-semibold text-gray-900 dark:text-white mr-4">
                                 $<%= item.price %>
                             </div>
+                                <form action="/add-to-cart" method="POST" class="inline">
+                                    <input type="hidden" name="itemId" value="<%= item._id %>">
+                                    <input type="hidden" name="itemType" value="feedItem">
+                                    <button type="submit" class="text-green-500 hover:text-green-700 ml-2">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                </form>
                             <% if (user && item.createdBy && item.createdBy.equals(user._id)) { %>
                                 <form action="/feedItem/<%= item._id %>?_method=DELETE" method="POST" class="inline">
                                     <button type="submit" class="text-red-500 hover:text-red-700">

@@ -1,0 +1,60 @@
+<div id="notification" class="fixed top-4 right-4 z-50 hidden">
+  <div class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
+    <span id="notification-message"></span>
+  </div>
+</div>
+<script>
+function showNotification(message, type = 'error') {  // Added type parameter with default value
+  const notification = document.getElementById('notification');
+  const messageElement = document.getElementById('notification-message');
+  const notificationBox = notification.querySelector('div');
+  
+  // Set the background color based on type
+  notificationBox.className = `px-6 py-3 rounded-lg shadow-lg text-white ${
+    type === 'success' ? 'bg-green-500' : 'bg-red-500'
+  }`;
+  
+  messageElement.textContent = message;
+  notification.classList.remove('hidden');
+  
+  // Hide after 3 seconds
+  setTimeout(() => {
+    notification.classList.add('hidden');
+  }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cartForms = document.querySelectorAll('form[action="/add-to-cart"]');
+  
+  cartForms.forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch('/add-to-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            itemId: formData.get('itemId'),
+            itemType: formData.get('itemType'),
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          showNotification(data.error, 'error');
+        } else {
+          showNotification('Item added to cart successfully', 'success');
+        }
+      } catch (err) {
+        showNotification('Error adding item to cart', 'error');
+      }
+    });
+  });
+});
+</script>

@@ -25,7 +25,15 @@ router.delete("/feedItem/:id", ensureAuth, postsController.deleteFeedItem);
 // Program Routes
 router.get("/program", allowGuestAccess, postsController.getProgram); // List all programs
 router.get("/program/:id", allowGuestAccess, postsController.getProgram); // Single program
-router.post("/createProgramItem", upload.single("image"), ensureAuth, postsController.createProgramItem);
+router.post(
+    "/createProgramItem", 
+    upload.fields([
+      { name: 'image', maxCount: 1 },
+      { name: 'programFile', maxCount: 1 }
+    ]), 
+    ensureAuth, 
+    postsController.createProgramItem
+  );
 
 //cart routes
 router.use("/", cartRoutes); // Add this line

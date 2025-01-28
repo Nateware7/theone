@@ -17,6 +17,10 @@ module.exports = {
 
       const Model = itemType === 'feedItem' ? FeedItem : ProgramItem;
       const item = await Model.findById(itemId);
+  
+      if (item.isSold) {
+        return res.status(400).json({ error: 'This account has already been sold' });
+      }
 
       if (!item) {
         return res.status(404).json({ error: 'Item not found' });

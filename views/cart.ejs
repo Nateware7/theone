@@ -80,11 +80,27 @@
                             <span>$<%= cart.total %></span>
                         </div>
                     </div>
-                    <form action="/create-checkout-session" method="POST">
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-6 rounded-lg">
-                            Proceed to Checkout
-                        </button>
-                    </form>
+                    <!-- In cart.ejs, add to the checkout form -->
+<!-- In cart.ejs, modify the checkout form -->
+<form action="/create-checkout-session" method="POST">
+    <!-- Add this email field ABOVE the checkout button -->
+    <div class="mb-4">
+      <label class="block mb-2 text-white">Where should we send your purchase?</label>
+      <input 
+        type="email" 
+        name="deliveryEmail" 
+        required
+        value="<%= user ? user.email : '' %>"
+        class="w-full p-2 bg-gray-800 rounded text-white placeholder-gray-400"
+        placeholder="Enter delivery email"
+      >
+    </div>
+  
+    <!-- Existing checkout button -->
+    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-6 rounded-lg">
+      Proceed to Checkout
+    </button>
+  </form>
                 </div>
             </div>
         <% } %>

@@ -1,5 +1,7 @@
 // FeedItem.js - Update the model
 const mongoose = require("mongoose");
+const bcrypt = require('bcryptjs');
+
 
 const FeedItemSchema = new mongoose.Schema({
   username: {
@@ -29,6 +31,26 @@ const FeedItemSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email']
+  },
+  password: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(v);
+      },
+      message: props => 'Password must contain uppercase, lowercase, and numbers'
+    }
+  },
+  isSold: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("FeedItem", FeedItemSchema);

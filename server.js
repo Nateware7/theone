@@ -13,6 +13,7 @@ const postRoutes = require("./routes/posts");
 require('dotenv').config(); // Make sure dotenv is configured
 
 
+
 //Use .env file in config folder
 require("dotenv").config({ path: "./config/.env" });
 

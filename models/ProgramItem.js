@@ -38,7 +38,9 @@ const ProgramItemSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
+  fileUrl: String,
+  fileCloudinaryId: String
 });
 
 module.exports = mongoose.model("ProgramItem", ProgramItemSchema);

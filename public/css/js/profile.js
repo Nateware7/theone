@@ -73,3 +73,33 @@ function toggleForm(radio) {
         userPreview.classList.add('hidden');
     }
 }
+
+function togglePasswordVisibility() {
+    const passwordField = document.getElementById('account-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+    } else {
+      passwordField.type = 'password';
+      eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Update preview when fields change
+    document.querySelectorAll('#user-form input, #user-form textarea').forEach(element => {
+      element.addEventListener('input', updatePreview);
+    });
+
+    function updatePreview() {
+      document.getElementById('preview-username').textContent = document.getElementById('username').value;
+      document.getElementById('preview-email').textContent = document.getElementById('account-email').value;
+      document.getElementById('preview-price').textContent = '$' + document.getElementById('user-price').value;
+      document.getElementById('preview-description').textContent = document.getElementById('user-description').value;
+      
+      // Update platform image
+      const selectedPlatform = document.querySelector('input[name="platform"]:checked').value;
+      document.getElementById('preview-platform').src = `css/imgs/${selectedPlatform}.png`;
+    }
+  });

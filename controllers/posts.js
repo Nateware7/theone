@@ -31,20 +31,29 @@ module.exports = {
     }
   },
 
+  // controllers/posts.js
   createFeedItem: async (req, res) => {
     try {
+      // Validate unique email
+      const existingAccount = await FeedItem.findOne({ email: req.body.email });
+      if (existingAccount) {
+        return res.status(400).json({ error: 'This email is already registered' });
+      }
+  
       await FeedItem.create({
         username: req.body.username,
-        platform: req.body.platform,  // Add this line
+        email: req.body.email, // new field
+        password: req.body.password, // new field
+        platform: req.body.platform,
         price: req.body.price,
         description: req.body.description,
         createdBy: req.user.id
       });
-      console.log("Feed item has been added!");
+      
       res.redirect("/feed");
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ error: "Error creating feed item" });
+      console.error('Create feed item error:', err);
+      res.status(500).json({ error: 'Server error creating account' });
     }
   },
   
@@ -130,37 +139,60 @@ module.exports = {
   // posts.js - Update the createProgramItem function
   createProgramItem: async (req, res) => {
     try {
-      // Validate file upload
-      if (!req.file) {
-        return res.status(400).json({ error: "Image file is required" });
+      // Validate file uploads
+      if (!req.files || !req.files.image || !req.files.programFile) {
+        return res.status(400).json({ 
+          error: "Both image and program file are required" 
+        });
       }
-
+  
       // Validate required fields
       const { title, description, price, tags, features } = req.body;
       if (!title || !description || !price) {
-        return res.status(400).json({ error: "Title, description, and price are required" });
+        return res.status(400).json({ 
+          error: "Title, description, and price are required" 
+        });
       }
-
-      // Upload image to cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
-
-      // Create program item
+  
+      // Upload image to Cloudinary
+      const imageResult = await cloudinary.uploader.upload(
+        req.files.image[0].path,
+        { folder: "program_images" }
+      );
+  
+      // Upload program file to Cloudinary
+      const fileResult = await cloudinary.uploader.upload(
+        req.files.programFile[0].path,
+        {
+          resource_type: "auto",
+          folder: "program_files",
+          allowed_formats: ["zip", "pdf", "docx"]
+        }
+      );
+  
+      // Create program item with both uploads
       const programItem = await ProgramItem.create({
         title,
         description,
         price: parseFloat(price),
         tags: tags ? tags.split(",").map(tag => tag.trim()) : [],
-        image: result.secure_url,
-        cloudinaryId: result.public_id,
         features: features ? features.split(",").map(f => f.trim()) : [],
+        image: imageResult.secure_url,
+        imageCloudId: imageResult.public_id,
+        fileUrl: fileResult.secure_url,
+        fileCloudId: fileResult.public_id,
         createdBy: req.user.id
       });
-
+  
       console.log("Program item created:", programItem._id);
       res.redirect("/program");
     } catch (err) {
       console.error("Create program error:", err);
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ 
+        error: process.env.NODE_ENV === 'development' 
+          ? err.message 
+          : 'Server error creating program' 
+      });
     }
   },  
   getProgram: async (req, res) => {

@@ -40,12 +40,6 @@ const FeedItemSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    validate: {
-      validator: function(v) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(v);
-      },
-      message: props => 'Password must contain uppercase, lowercase, and numbers'
-    }
   },
   isSold: {
     type: Boolean,

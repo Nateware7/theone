@@ -96,24 +96,26 @@ module.exports = {
 
             // Update inventory
             item.isSold = true;
-            await item.save();
 
             if (cartItem.itemType === 'feedItem') {
-              const newPassword = crypto.randomBytes(8).toString('hex');
+              // Store the original password before hashing
+              const originalPassword = item.password;
               const tempToken = crypto.randomBytes(32).toString('hex');
               
-              item.password = await bcrypt.hash(newPassword, 10);
+              // Hash the password for database storage
+              item.password = await bcrypt.hash(originalPassword, 10);
               item.tempToken = tempToken;
               item.tokenExpiry = Date.now() + 3600000;
               await item.save();
 
               return {
                 ...item.toObject(),
-                password: newPassword,
+                password: originalPassword, // Use original password for email
                 itemType: 'feedItem'
               };
             }
 
+            await item.save();
             return {
               ...item.toObject(),
               itemType: 'programItem'

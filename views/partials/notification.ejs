@@ -4,55 +4,60 @@
   </div>
 </div>
 <script>
-function showNotification(message, type = 'error') {  // Added type parameter with default value
+function showNotification(message, type = 'success') {
   const notification = document.getElementById('notification');
   const messageElement = document.getElementById('notification-message');
   const notificationBox = notification.querySelector('div');
   
-  // Set the background color based on type
+  // Update classes based on type
   notificationBox.className = `px-6 py-3 rounded-lg shadow-lg text-white ${
-    type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    type === 'error' ? 'bg-red-500' : 'bg-green-500'
   }`;
   
   messageElement.textContent = message;
   notification.classList.remove('hidden');
   
-  // Hide after 3 seconds
   setTimeout(() => {
     notification.classList.add('hidden');
   }, 3000);
 }
 
+// Enhanced form submission handler
 document.addEventListener('DOMContentLoaded', () => {
-  const cartForms = document.querySelectorAll('form[action="/add-to-cart"]');
-  
-  cartForms.forEach(form => {
+  document.querySelectorAll('form[action="/add-to-cart"]').forEach(form => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const formData = new FormData(form);
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
       
       try {
+        const formData = new FormData(form);
         const response = await fetch('/add-to-cart', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             itemId: formData.get('itemId'),
-            itemType: formData.get('itemType'),
-          }),
+            itemType: formData.get('itemType')
+          })
         });
-        
+
         const data = await response.json();
         
         if (!response.ok) {
-          showNotification(data.error, 'error');
+          showNotification(data.error || 'Error adding item to cart', 'error');
         } else {
-          showNotification('Item added to cart successfully', 'success');
+          showNotification(data.message || 'Item added to cart', 'success');
+          // Optional: Update cart counter or UI elements
+          const cartCounter = document.getElementById('cart-counter');
+          if (cartCounter) {
+            cartCounter.textContent = parseInt(cartCounter.textContent) + 1;
+          }
         }
       } catch (err) {
-        showNotification('Error adding item to cart', 'error');
+        showNotification('Network error - please try again', 'error');
+      } finally {
+        submitButton.disabled = false;
       }
     });
   });

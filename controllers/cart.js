@@ -17,10 +17,10 @@ module.exports = {
 
       const Model = itemType === 'feedItem' ? FeedItem : ProgramItem;
       const item = await Model.findById(itemId);
-  
-      if (item.isSold) {
-        return res.status(400).json({ error: 'This account has already been sold' });
-      }
+    
+    if (item.isSold) {
+      return res.status(400).json({ error: 'This item has been sold' });
+    }
 
       if (!item) {
         return res.status(404).json({ error: 'Item not found' });
@@ -52,7 +52,10 @@ module.exports = {
       req.session.cart.total = req.session.cart.items.reduce((total, item) => 
         total + (item.price * item.quantity), 0);
 
-      res.redirect('/cart');
+      res.json({ 
+        message: 'Item added to cart successfully',
+        cartItem // optional: send back added item if needed
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Server error adding to cart' });

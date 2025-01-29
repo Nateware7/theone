@@ -16,13 +16,12 @@ module.exports = {
   },
   getFeed: async (req, res) => {
     try {
-      const feedItems = await FeedItem.find()
-        .sort({ price: -1 })  // Sort by price descending
-        .lean();  // Convert to plain JavaScript objects
+      const feedItems = await FeedItem.find({ isSold: false }) // Add filter
+        .sort({ price: -1 })
+        .lean();
       
-      // Pass the items and user to the template
       res.render("feed", { 
-        feedItems: feedItems, 
+        feedItems: feedItems,
         user: req.isAuthenticated() ? req.user : null 
       });
     } catch (err) {
@@ -195,23 +194,23 @@ module.exports = {
       });
     }
   },  
-  getProgram: async (req, res) => {
-    try {
-      if (req.params.id) {
-        const program = await ProgramItem.findById(req.params.id);
-        if (!program) {
-          return res.status(404).send("Program not found");
-        }
-        // Render the new programDetail template for single item view
-        res.render("programDetail.ejs", { program, user: req.isAuthenticated() ? req.user : null });
-      } else {
-        const programs = await ProgramItem.find().sort({ createdAt: -1 });
-        res.render("program.ejs", { programs, user: req.isAuthenticated() ? req.user : null });
-      }
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("Server Error");
+  // In getProgram method (similar pattern)
+getProgram: async (req, res) => {
+  try {
+    if (req.params.id) {
+      const program = await ProgramItem.findById(req.params.id);
+      // ... existing code
+    } else {
+      const programs = await ProgramItem.find({ isSold: false }); // Add filter
+      res.render("program.ejs", { 
+        programs, 
+        user: req.isAuthenticated() ? req.user : null 
+      });
     }
-  },
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+},
   
 };

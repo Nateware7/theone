@@ -4,6 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          primary: '#27ae60',
+          warning: '#fff3cd'
+        },
         customDark: 'rgba(25, 23, 22, 0.98)', // Adjust opacity (250 is invalid, replaced with 0.98)
       },
       fontFamily: {

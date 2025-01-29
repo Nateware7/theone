@@ -5,6 +5,8 @@ const FeedItem = require('../models/FeedItem');
 const ProgramItem = require('../models/ProgramItem');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const ejs = require('ejs');
+const path = require('path');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -130,28 +132,25 @@ module.exports = {
       const validItems = purchasedItems.filter(item => item !== null);
       
       if (validItems.length > 0) {
-        const emailContent = validItems.map(item => {
-          if (item.itemType === 'feedItem') {
-            return `
-              <div style="margin-bottom: 2rem;">
-                <h3>${item.username} (${item.platform})</h3>
-                <p>Email: ${item.email}</p>
-                <p>Password: ${item.password}</p>
-                <p>Temporary login: 
-                  <a href="${process.env.BASE_URL}/login/${item.tempToken}">
-                    Access Account
-                  </a>
-                </p>
-              </div>
-            `;
+        const emailHtml = await ejs.renderFile(
+          path.join(__dirname, '../views/credentials.ejs'),
+          {
+            purchasedItems: validItems.filter(item => item.itemType === 'feedItem'),
+            process: { env: process.env },
+            // Add any other variables your template needs
           }
-          return `
-            <div style="margin-bottom: 2rem;">
-              <h3>${item.title}</h3>
-              <p>Download: <a href="${item.fileUrl}">Program Files</a></p>
-            </div>
-          `;
-        }).join('');
+        );
+        await transporter.sendMail({
+          to: deliveryEmail,
+          subject: 'Your Purchased Account Credentials',
+          html: emailHtml, // Use the rendered EJS template
+          attachments: validItems
+            .filter(item => item.itemType === 'programItem')
+            .map(item => ({
+              filename: `${item.title}.${item.fileUrl.split('.').pop()}`,
+              path: item.fileUrl
+            }))
+        });
 
         const attachments = validItems
           .filter(item => item.itemType === 'programItem')
@@ -160,18 +159,7 @@ module.exports = {
             path: item.fileUrl
           }));
 
-        await transporter.sendMail({
-          to: deliveryEmail,
-          subject: 'Your Purchase Details',
-          html: `
-            <h1>Purchase Confirmation</h1>
-            ${emailContent}
-            <p style="margin-top: 2rem; color: #666;">
-              This email contains sensitive information - do not share it with anyone.
-            </p>
-          `,
-          attachments
-        });
+
       }
 
       await dbSession.commitTransaction();
@@ -180,10 +168,13 @@ module.exports = {
     } catch (err) {
       await dbSession.abortTransaction();
       console.error('Payment processing error:', err);
-      res.status(500).render('error', {
-        message: 'Order fulfillment failed',
-        error: process.env.NODE_ENV === 'development' ? err.message : 'Contact support'
-      });
+
+    res.status(500).render('error', {
+      message: 'Order fulfillment failed',
+      error: process.env.NODE_ENV === 'development' ? 
+      `Error: ${err.message}` : 
+      'Please contact support@myuncle.com'
+    });
     } finally {
       dbSession.endSession();
     }

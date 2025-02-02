@@ -2,16 +2,15 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
-
 const FeedItemSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
   },
-  platform: {  // Add this field
+  platform: {
     type: String,
     required: true,
-    enum: ['instagram', 'x', 'discord']  // Restrict to valid platforms
+    enum: ['instagram', 'x', 'discord'],
   },
   price: {
     type: Number,
@@ -20,12 +19,12 @@ const FeedItemSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    maxLength: 50
+    maxLength: 50,
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -35,7 +34,7 @@ const FeedItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email']
+    // Remove the match validator for encrypted emails
   },
   password: {
     type: String,
@@ -43,8 +42,8 @@ const FeedItemSchema = new mongoose.Schema({
   },
   isSold: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("FeedItem", FeedItemSchema);

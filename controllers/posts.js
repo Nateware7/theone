@@ -1,9 +1,9 @@
+const crypto = require('crypto');
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
 const FeedItem = require("../models/FeedItem");
 const ProgramItem = require("../models/ProgramItem");
-
-// Add this to the module.exports
+const { encrypt } = require('../utils/encryption');
 
 module.exports = {
   getProfile: async (req, res) => {
@@ -31,25 +31,39 @@ module.exports = {
   },
 
   // controllers/posts.js
-  createFeedItem: async (req, res) => {
+  createFeedItem : async (req, res) => {
     try {
-      // Validate unique email
-      const existingAccount = await FeedItem.findOne({ email: req.body.email });
-      if (existingAccount) {
-        return res.status(400).json({ error: 'This email is already registered' });
+      const { email } = req.body;
+  
+      // Validate email format before encryption
+      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
       }
   
-      await FeedItem.create({
+      // Encrypt email and password
+      const encryptedEmail = encrypt(email);
+      const encryptedPassword = encrypt(req.body.password);
+  
+      console.log('Original Email:', email); // Debugging
+      console.log('Encrypted Email:', encryptedEmail); // Debugging
+      console.log('Original Password:', req.body.password); // Debugging
+      console.log('Encrypted Password:', encryptedPassword); // Debugging
+  
+      // Create the FeedItem
+      const newFeedItem = await FeedItem.create({
         username: req.body.username,
-        email: req.body.email, // new field
-        password: req.body.password, // new field
+        emailHash: crypto.createHash('sha256').update(email).digest('hex'),
+        email: encryptedEmail,
+        password: encryptedPassword,
         platform: req.body.platform,
         price: req.body.price,
         description: req.body.description,
-        createdBy: req.user.id
+        createdBy: req.user.id,
       });
-      
-      res.redirect("/feed");
+  
+      console.log('FeedItem Created Successfully:', newFeedItem); // Debugging
+      res.redirect('/feed');
     } catch (err) {
       console.error('Create feed item error:', err);
       res.status(500).json({ error: 'Server error creating account' });

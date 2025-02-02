@@ -7,7 +7,7 @@ const { ensureAuth, ensureGuest, allowGuestAccess } = require("../middleware/aut
 const upload = require("../middleware/multer");
 const cartRoutes = require("../routes/cart");
 const checkoutRoutes = require('../routes/checkout');
-
+const checkoutController = require('../controllers/checkout');
 
 
 // Main Routes
@@ -39,4 +39,6 @@ router.post(
 router.use("/", cartRoutes); // Add this line
 // Add after other route declarations
 router.use('/', checkoutRoutes);
+
+router.get('/credentials/:token', checkoutController.viewCredentials);
 module.exports = router;

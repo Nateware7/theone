@@ -7,6 +7,9 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const ejs = require('ejs');
 const path = require('path');
+const { decrypt } = require('../utils/encryption');
+const Token = require('../models/Token');
+
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -71,112 +74,127 @@ module.exports = {
     }
   },
 
-  handleSuccess: async (req, res) => {
-    const dbSession = await mongoose.startSession();
-    try {
-      dbSession.startTransaction();
-      const stripeSession = await stripe.checkout.sessions.retrieve(req.query.session_id);
-      const paymentIntent = await stripe.paymentIntents.retrieve(stripeSession.payment_intent);
-      
-      if (stripeSession.payment_status !== 'paid') {
-        throw new Error('Payment not completed');
-      }
+ // Modified handleSuccess function
+ handleSuccess: async (req, res) => {
+  const dbSession = await mongoose.startSession();
+  try {
+    dbSession.startTransaction();
+    const stripeSession = await stripe.checkout.sessions.retrieve(req.query.session_id);
+    const paymentIntent = await stripe.paymentIntents.retrieve(stripeSession.payment_intent);
 
-      const deliveryEmail = paymentIntent.metadata.deliveryEmail;
-      if (!deliveryEmail) {
-        throw new Error('No delivery email provided');
-      }
+    if (stripeSession.payment_status !== 'paid') {
+      throw new Error('Payment not completed');
+    }
 
-      const purchasedItems = await Promise.all(
-        req.session.cart.items.map(async (cartItem) => {
-          try {
-            const Model = cartItem.itemType === 'feedItem' ? FeedItem : ProgramItem;
-            const item = await Model.findById(cartItem.itemId).session(dbSession);
+    const deliveryEmail = paymentIntent.metadata.deliveryEmail;
+    if (!deliveryEmail) {
+      throw new Error('No delivery email provided');
+    }
 
-            if (!item) throw new Error('Item not found');
-            if (item.isSold) throw new Error('Item already sold');
+    const purchasedItems = await Promise.all(
+      req.session.cart.items.map(async (cartItem) => {
+        try {
+          const Model = cartItem.itemType === 'feedItem' ? FeedItem : ProgramItem;
+          const item = await Model.findById(cartItem.itemId).session(dbSession);
 
-            // Update inventory
-            item.isSold = true;
+          if (!item) throw new Error('Item not found');
+          if (item.isSold) throw new Error('Item already sold');
 
-            if (cartItem.itemType === 'feedItem') {
-              // Store the original password before hashing
-              const originalPassword = item.password;
-              const tempToken = crypto.randomBytes(32).toString('hex');
-              
-              // Hash the password for database storage
-              item.password = await bcrypt.hash(originalPassword, 10);
-              item.tempToken = tempToken;
-              item.tokenExpiry = Date.now() + 3600000;
-              await item.save();
+          // Mark item as sold
+          item.isSold = true;
+          await item.save();
 
-              return {
-                ...item.toObject(),
-                password: originalPassword, // Use original password for email
-                itemType: 'feedItem'
-              };
-            }
+          if (cartItem.itemType === 'feedItem') {
 
-            await item.save();
+            const email = decrypt(item.email);
+            const password = decrypt(item.password);
+
+
             return {
               ...item.toObject(),
-              itemType: 'programItem'
+              email,
+              password,
+              itemType: 'feedItem',
             };
-          } catch (err) {
-            console.error(`Error processing item ${cartItem.itemId}:`, err);
-            return null;
           }
-        })
+
+          // For program items, return secure download link
+          return {
+            ...item.toObject(),
+            downloadLink: item.fileUrl,
+            itemType: 'programItem',
+          };
+        } catch (err) {
+          console.error(`Error processing item ${cartItem.itemId}:`, err);
+          return null;
+        }
+      })
+    );
+
+    const validItems = purchasedItems.filter((item) => item !== null);
+
+    if (validItems.length > 0) {
+      const emailHtml = await ejs.renderFile(
+        path.join(__dirname, '../views/credentials.ejs'),
+        {
+          purchasedItems: validItems,
+          process: { env: process.env },
+        }
       );
 
-      const validItems = purchasedItems.filter(item => item !== null);
-      
-      if (validItems.length > 0) {
-        const emailHtml = await ejs.renderFile(
-          path.join(__dirname, '../views/credentials.ejs'),
-          {
-            purchasedItems: validItems.filter(item => item.itemType === 'feedItem'),
-            process: { env: process.env },
-            // Add any other variables your template needs
-          }
-        );
-        await transporter.sendMail({
-          to: deliveryEmail,
-          subject: 'Your Purchased Account Credentials',
-          html: emailHtml, // Use the rendered EJS template
-          attachments: validItems
-            .filter(item => item.itemType === 'programItem')
-            .map(item => ({
-              filename: `${item.title}.${item.fileUrl.split('.').pop()}`,
-              path: item.fileUrl
-            }))
-        });
+      await transporter.sendMail({
+        to: deliveryEmail,
+        subject: 'Your Purchased Content',
+        html: emailHtml,
+      });
+    }
 
-        const attachments = validItems
-          .filter(item => item.itemType === 'programItem')
-          .map(item => ({
-            filename: `${item.title}.${item.fileUrl.split('.').pop()}`,
-            path: item.fileUrl
-          }));
-
-
-      }
-
-      await dbSession.commitTransaction();
-      req.session.cart = { items: [], total: 0 };
-      res.render('success');
-    } catch (err) {
-      await dbSession.abortTransaction();
-      console.error('Payment processing error:', err);
-
+    await dbSession.commitTransaction();
+    req.session.cart = { items: [], total: 0 };
+    res.render('success');
+  } catch (err) {
+    await dbSession.abortTransaction();
+    console.error('Payment processing error:', err);
     res.status(500).render('error', {
       message: 'Order fulfillment failed',
-      error: process.env.NODE_ENV === 'development' ? 
-      `Error: ${err.message}` : 
-      'Please contact support@myuncle.com'
+      error: process.env.NODE_ENV === 'development' ? `Error: ${err.message}` : 'Please contact support@myuncle.com',
     });
-    } finally {
-      dbSession.endSession();
-    }
+  } finally {
+    dbSession.endSession();
   }
+},
+
+viewCredentials: async (req, res) => {
+  try {
+    const token = await Token.findOne({
+      token: req.params.token,
+      expires: { $gt: Date.now() }
+    });
+
+    if (!token) {
+      return res.status(404).render('error', {
+        message: 'Link expired or invalid'
+      });
+    }
+
+    console.log("Token Found:", token); // Debugging log
+
+    // Decrypt credentials
+    const credentials = {
+      email: decrypt(token.credentials.email),
+      password: decrypt(token.credentials.password)
+    };
+
+    // Immediately delete token
+    await Token.deleteOne({ _id: token._id });
+
+    res.render('secure-credentials', { credentials });
+  } catch (err) {
+    console.error('Error in viewCredentials:', err); // Debugging log
+    res.status(500).render('error', {
+      message: 'Failed to retrieve credentials',
+      error: process.env.NODE_ENV === 'development' ? err.message : 'Please contact support'
+    });
+  }
+}
 };

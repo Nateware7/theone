@@ -1,0 +1,17 @@
+<!-- views/error.ejs -->
+<%- include('partials/header') -%>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
+            <h2 class="font-bold text-xl mb-2"><%= message %></h2>
+            <% if (typeof error !== 'undefined') { %>
+                <p class="mb-2"><%= error %></p>
+            <% } %>
+        </div>
+        <a href="/" class="text-blue-600 hover:text-blue-800">
+            &larr; Return to Homepage
+        </a>
+    </div>
+</body>
+</html>

@@ -60,6 +60,18 @@ app.use(flash());
 app.use("/", mainRoutes);
 app.use("/post", postRoutes);
 
+
+// cyy
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // server.js - ADJUST
+  res.setHeader('Content-Security-Policy', 
+  "default-src 'self'; img-src 'self' data: res.cloudinary.com;");
+  next();
+});
+
 //Server Running
 app.listen(process.env.PORT, () => {
   console.log("Server is running, you better catch it!");
